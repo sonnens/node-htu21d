@@ -4,7 +4,7 @@ node interface for the HTU21D temperature and humidity sensor for Raspberry Pi
 
 ## Install
 ````bash
-$ npm install i2c
+$ npm install htu21d
 ````
 
 ## Usage
