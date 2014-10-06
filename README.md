@@ -52,6 +52,8 @@ Load kernel module
 ````bash
 $ sudo modprobe i2c-bcm2708
 
+````
+
 ## Questions?
 
 http://www.twitter.com/johnnysunshine
