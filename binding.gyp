@@ -2,7 +2,7 @@
   "targets": [
     {
       "target_name": "htu21d",
-      "sources": [ "htu21d.cc", "htu21d_impl.cc" ]
+      "sources": [ "src/htu21d.cc", "src/htu21d_impl.cc" ]
     }
   ]
 }

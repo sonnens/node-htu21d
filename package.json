@@ -1,0 +1,12 @@
+{
+  "name": "htu21d",
+  "version": "1.0.0",
+  "description": "node interface for the HTU21D temperature and humidity sensor",
+  "main": "main.js",
+  "author": "John Sonnenschein",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sonnens/node-htu21d"
+  },
+  "license": "BSD",
+} 
