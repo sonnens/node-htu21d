@@ -15,7 +15,7 @@ Persistent<Function> Htu21d::constructor;
 
 Htu21d::Htu21d(char* device, int addr) {
   fd = open(device, O_RDWR);
-  if (fd > 0) {
+  if (fd < 0) {
     ThrowException(Exception::Error(String::New("Failed to open the i2c bus")));
   }
   if (ioctl(fd, I2C_SLAVE, addr) < 0) {
