@@ -46,6 +46,9 @@ class Htu21d : public node::ObjectWrap {
   static v8::Handle<v8::Value> New(const v8::Arguments& args);
   static v8::Handle<v8::Value> Humidity(const v8::Arguments& args);
   static v8::Handle<v8::Value> Temp(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Reset(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Mode(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Heater(const v8::Arguments& args);
   
   static v8::Persistent<v8::Function> constructor;
 

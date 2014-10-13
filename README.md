@@ -21,6 +21,23 @@ var temp = sensor.temperature();
 
 var humidity = sensor.humidity();
 
+# turn on the internal heater
+sensor.setHeater(true)
+
+var check_temp = sensor.temperature();
+
+var check_humidity = sensor.humidity();
+
+# disable the internal heater
+
+sensor.setHeater(false);
+
+# set the measurement resolution, explained in the README
+
+sensor.setMode(3);
+
+var temp_lowres = sensor.temperature();
+
 ````
 the htu21d object contains fields for sensor resolution, lowbattery status, and
 on-chip heater, as per the chip's capabilities, as well as devnode and chip
@@ -31,10 +48,22 @@ address
 
 { heater: false,
   lowbattery: false,
-  resolution: { temperature: 14, humidity: 12 },
+  resolution: { mode: 0, temperature: 14, humidity: 12 },
   devnode: '/dev/i2c-1',
   address: 64 }
 ````
+
+The HTU21D has 4 modes for resolution, for which there is unfortunately no
+good way to express.
+
+To change the resolution, consult the following table:
+
+|mode | Temp  | Humidity |
+|-----|-------|----------|
+|  0  |14 bit |12 bit    |
+|  1  |12 bit |8 bit     |   
+|  2  |13 bit |10 bit    |
+|  3  |11 bit |11 bit    |
 
 ## Raspberry Pi Setup
 
