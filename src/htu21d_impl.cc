@@ -1,4 +1,3 @@
-#define BUILDING_NODE_EXTENSION
 #include <node.h>
 #include <string>
 #include <unistd.h>
@@ -13,18 +12,64 @@ using namespace std;
 
 Persistent<Function> Htu21d::constructor;
 
-Htu21d::Htu21d(char* device, int addr) {
-  fd = open(device, O_RDWR);
+Htu21d::Htu21d(char* dev, int addr) {
+  fd = open(dev, O_RDWR);
   if (fd < 0) {
     ThrowException(Exception::Error(String::New("Failed to open the i2c bus")));
   }
   if (ioctl(fd, I2C_SLAVE, addr) < 0) {
     ThrowException(Exception::Error(String::New("Failed to acquire bus access and/or talk to slave.")));
   }
+  address = addr;
+  device = std::string(dev);
 }
 
 Htu21d::~Htu21d() {
   close(fd);
+}
+
+static v8::Handle<Value>
+GetAddress(v8::Local<v8::String> property, const v8::AccessorInfo& info) {
+  Htu21d* obj = node::ObjectWrap::Unwrap<Htu21d>(info.Holder()); 
+  return Number::New(obj->address);
+}
+
+static void
+SetAddress(Local<String> property, Local<Value> value, const AccessorInfo& info) {
+  Htu21d* obj = node::ObjectWrap::Unwrap<Htu21d>(info.Holder());
+  if (value->IsInt32())
+    obj->reaquire(&(obj->device), (int) value->ToInt32()->Value());
+}
+
+static v8::Handle<Value>
+GetDevice(v8::Local<v8::String> property, const v8::AccessorInfo& info) {
+  Htu21d* obj = node::ObjectWrap::Unwrap<Htu21d>(info.Holder()); 
+  return String::New(obj->device.c_str());
+}
+
+static void
+SetDevice(Local<String> property, Local<Value> value, const AccessorInfo& info) {
+  Htu21d* obj = node::ObjectWrap::Unwrap<Htu21d>(info.Holder()); 
+  v8::String::Utf8Value v8str(value);
+  string str = string(*v8str);
+  obj->reaquire(&str, obj->address);
+}
+
+void
+Htu21d::reaquire(string* dev, int addr) {
+
+  close(fd);
+
+  fd = open(dev->c_str(), O_RDWR);
+  if (fd < 0) {
+    ThrowException(Exception::Error(String::New("Failed to open the i2c bus")));
+  }
+  if (ioctl(fd, I2C_SLAVE, addr) < 0) {
+    ThrowException(Exception::Error(String::New("Failed to acquire bus access and/or talk to slave.")));
+  }
+  address = addr;
+  device = *dev;
+
 }
 
 void Htu21d::Init(Handle<Object> exports) {
@@ -37,7 +82,9 @@ void Htu21d::Init(Handle<Object> exports) {
 
   tpl->PrototypeTemplate()->Set(String::NewSymbol("temperature"),
       FunctionTemplate::New(Temp)->GetFunction());
-
+  //tpl->InstanceTemplate()->SetAccessor(String::New("resolution"), GetRes, SetRes);
+  tpl->InstanceTemplate()->SetAccessor(String::New("address"), GetAddress, SetAddress);
+  tpl->InstanceTemplate()->SetAccessor(String::New("devnode"), GetDevice, SetDevice);
   constructor = Persistent<Function>::New(tpl->GetFunction());
   exports->Set(String::NewSymbol("Htu21d"), constructor);
 }
