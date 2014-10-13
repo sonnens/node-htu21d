@@ -22,6 +22,19 @@ var temp = sensor.temperature();
 var humidity = sensor.humidity();
 
 ````
+the htu21d object contains fields for sensor resolution, lowbattery status, and
+on-chip heater, as per the chip's capabilities, as well as devnode and chip
+address
+
+```javascript
+> sensor
+
+{ heater: false,
+  lowbattery: false,
+  resolution: { temperature: 14, humidity: 12 },
+  devnode: '/dev/i2c-1',
+  address: 64 }
+````
 
 ## Raspberry Pi Setup
 
